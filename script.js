@@ -895,7 +895,7 @@ ${recipeData.instructions.map((inst, i) => `${i + 1}. ${inst.instruction}${inst.
 
 Notes: ${recipeData.notes || 'None'}
 
-Based on this recipe, generate relevant tags that would help categorize and find this recipe. Tags should be single words or short phrases, separated by commas. Focus on cuisine type, cooking method, dietary restrictions, difficulty level, and key ingredients (main protein). Return only the tags, no explanation.
+Based on this recipe, generate relevant tags that would help categorize and find this recipe. Tags should be single words or short phrases, separated by commas. Focus on cuisine type, cooking method, dietary restrictions, difficulty level, and key ingredients (main protein). Return only the tags and no additional parenthesis like (potentially) or (implied), no explanation.
         `;
         
         const response = await fetch(`${API_BASE_URL}/ai/generate-tags`, {
