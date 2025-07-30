@@ -781,6 +781,7 @@ body {
     border-radius: 8px;
     width: 90%;
     max-width: 600px;
+    min-width: 400px;
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
@@ -790,6 +791,14 @@ body {
 
 .recipe-detail-modal {
     max-width: 800px;
+}
+
+/* Edit modal specific styles */
+#editModal .modal-content {
+    max-width: 900px;
+    min-width: 600px;
+    width: 95%;
+    max-height: 85vh;
 }
 
 .close {
@@ -981,6 +990,14 @@ body {
         margin: 10% auto;
         width: 95%;
         padding: 20px;
+        min-width: unset;
+    }
+    
+    #editModal .modal-content {
+        width: 98%;
+        max-width: none;
+        min-width: unset;
+        margin: 5% auto;
     }
     
     .ingredient-row,
@@ -1014,5 +1031,16 @@ body {
     
     .nutrition-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 2% auto;
+        padding: 15px;
+    }
+    
+    #editModal .modal-content {
+        width: 99%;
+        margin: 1% auto;
     }
 } 

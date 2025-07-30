@@ -486,7 +486,7 @@ async function fetchSourceBreakdown() {
             </div>
         `;
         
-        const response = await fetch(`${API_BASE_URL}?limit=1000`); // Get all recipes
+        const response = await fetch(`${API_BASE_URL}`); // Get all recipes
         const data = await response.json();
         
         if (response.ok) {
@@ -755,7 +755,7 @@ function populateEditForm(recipe) {
                     <div class="ingredient-row">
                         <input type="text" placeholder="Ingredient name" class="ingredient-name" value="${ingredient.name}" required>
                         <input type="text" placeholder="Amount (e.g., 1/2, 2, 1.5)" class="ingredient-amount" value="${ingredient.amount}" required>
-                        <input type="text" placeholder="Unit" class="ingredient-unit" value="${ingredient.unit}" required>
+                        <input type="text" placeholder="Unit" class="ingredient-unit" value="${ingredient.unit}">
                         <input type="text" placeholder="Notes (optional)" class="ingredient-notes" value="${ingredient.notes || ''}">
                         <button type="button" class="remove-ingredient-btn">×</button>
                     </div>
@@ -830,7 +830,7 @@ function populateEditForm(recipe) {
             row.innerHTML = `
                 <input type="text" placeholder="Ingredient name" class="ingredient-name" required>
                 <input type="text" placeholder="Amount (e.g., 1/2, 2, 1.5)" class="ingredient-amount" required>
-                <input type="text" placeholder="Unit" class="ingredient-unit" required>
+                <input type="text" placeholder="Unit" class="ingredient-unit">
                 <input type="text" placeholder="Notes (optional)" class="ingredient-notes">
                 <button type="button" class="remove-ingredient-btn">×</button>
             `;
@@ -1065,11 +1065,11 @@ function collectFormData(form) {
         const unit = row.querySelector('.ingredient-unit').value;
         const notes = row.querySelector('.ingredient-notes').value;
         
-        if (name && amount && unit) {
+        if (name && amount) {
             ingredients.push({
                 name,
                 amount,
-                unit,
+                unit: unit || undefined,
                 notes: notes || undefined
             });
         }
@@ -1125,7 +1125,7 @@ function resetForm() {
         <div class="ingredient-row">
             <input type="text" placeholder="Ingredient name" class="ingredient-name" required>
             <input type="text" placeholder="Amount (e.g., 1/2, 2, 1.5)" class="ingredient-amount" required>
-            <input type="text" placeholder="Unit" class="ingredient-unit" required>
+            <input type="text" placeholder="Unit" class="ingredient-unit">
             <input type="text" placeholder="Notes (optional)" class="ingredient-notes">
             <button type="button" class="remove-ingredient-btn">×</button>
         </div>
