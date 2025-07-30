@@ -1,3 +1,26 @@
+// Polyfill for crypto.randomUUID for older browsers
+if (typeof crypto !== 'undefined' && !crypto.randomUUID) {
+    crypto.randomUUID = function() {
+        // Fallback UUID generation that works in all browsers
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
+} else if (typeof crypto === 'undefined') {
+    // If crypto is not available at all, create a global crypto object
+    window.crypto = {
+        randomUUID: function() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+    };
+}
+
 // API Configuration
 const API_BASE_URL = 'http://192.168.68.61:3000/api/recipes';
 
@@ -179,7 +202,7 @@ function addIngredientRow() {
     row.className = 'ingredient-row';
     row.innerHTML = `
         <input type="text" placeholder="Ingredient name" class="ingredient-name" required>
-        <input type="number" placeholder="Amount" class="ingredient-amount" min="0" step="0.1" required>
+        <input type="text" placeholder="Amount (e.g., 1/2, 2, 1.5)" class="ingredient-amount">
         <input type="text" placeholder="Unit" class="ingredient-unit" required>
         <input type="text" placeholder="Notes (optional)" class="ingredient-notes">
         <button type="button" class="remove-ingredient-btn">×</button>
@@ -731,7 +754,7 @@ function populateEditForm(recipe) {
                 ${recipe.ingredients.map((ingredient, index) => `
                     <div class="ingredient-row">
                         <input type="text" placeholder="Ingredient name" class="ingredient-name" value="${ingredient.name}" required>
-                        <input type="number" placeholder="Amount" class="ingredient-amount" value="${ingredient.amount}" min="0" step="0.1" required>
+                        <input type="text" placeholder="Amount (e.g., 1/2, 2, 1.5)" class="ingredient-amount" value="${ingredient.amount}" required>
                         <input type="text" placeholder="Unit" class="ingredient-unit" value="${ingredient.unit}" required>
                         <input type="text" placeholder="Notes (optional)" class="ingredient-notes" value="${ingredient.notes || ''}">
                         <button type="button" class="remove-ingredient-btn">×</button>
@@ -806,7 +829,7 @@ function populateEditForm(recipe) {
             row.className = 'ingredient-row';
             row.innerHTML = `
                 <input type="text" placeholder="Ingredient name" class="ingredient-name" required>
-                <input type="number" placeholder="Amount" class="ingredient-amount" min="0" step="0.1" required>
+                <input type="text" placeholder="Amount (e.g., 1/2, 2, 1.5)" class="ingredient-amount" required>
                 <input type="text" placeholder="Unit" class="ingredient-unit" required>
                 <input type="text" placeholder="Notes (optional)" class="ingredient-notes">
                 <button type="button" class="remove-ingredient-btn">×</button>
@@ -872,7 +895,8 @@ ${recipeData.instructions.map((inst, i) => `${i + 1}. ${inst.instruction}${inst.
 
 Notes: ${recipeData.notes || 'None'}
 
-Based on this recipe, generate 5-8 relevant tags that would help categorize and find this recipe. Tags should be single words or short phrases, separated by commas. Focus on cuisine type, cooking method, dietary restrictions, difficulty level, and key ingredients. Return only the tags, no explanation.
+Based on this recipe, generate relevant tags that would help categorize and find this recipe. Tags should be single words or short phrases, separated by commas. Focus on cuisine type, cooking method, dietary restrictions, difficulty level, and key ingredients (main protein). A good example for
+a italian sheet pan dish would be (quick and easy, chicken, dinner, italian) Return only the tags, no explanation.
         `;
         
         const response = await fetch('http://192.168.68.63:11434/api/generate', {
@@ -1037,7 +1061,7 @@ function collectFormData(form) {
     const ingredientRows = form.querySelectorAll('.ingredient-row');
     ingredientRows.forEach(row => {
         const name = row.querySelector('.ingredient-name').value;
-        const amount = parseFloat(row.querySelector('.ingredient-amount').value);
+        const amount = row.querySelector('.ingredient-amount').value;
         const unit = row.querySelector('.ingredient-unit').value;
         const notes = row.querySelector('.ingredient-notes').value;
         
@@ -1100,7 +1124,7 @@ function resetForm() {
     ingredientsList.innerHTML = `
         <div class="ingredient-row">
             <input type="text" placeholder="Ingredient name" class="ingredient-name" required>
-            <input type="number" placeholder="Amount" class="ingredient-amount" min="0" step="0.1" required>
+            <input type="text" placeholder="Amount (e.g., 1/2, 2, 1.5)" class="ingredient-amount" required>
             <input type="text" placeholder="Unit" class="ingredient-unit" required>
             <input type="text" placeholder="Notes (optional)" class="ingredient-notes">
             <button type="button" class="remove-ingredient-btn">×</button>
