@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking With Chub - Italian Recipe Collection</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Using traditional system fonts for Italian feel -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-utensils"></i> Cooking With Chub</h1>
+                <p>La Cucina Italiana - Traditional Italian Recipes</p>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="recipes">
+                <i class="fas fa-book-open"></i> Recipes
+            </button>
+            <button class="tab-btn" data-tab="add">
+                <i class="fas fa-plus"></i> Add Recipe
+            </button>
+            <button class="tab-btn" data-tab="stats">
+                <i class="fas fa-chart-bar"></i> Statistics
+            </button>
+            <button class="tab-btn" data-tab="random">
+                <i class="fas fa-dice"></i> Random Recipe
+            </button>
+        </nav>
+
+        <main class="main-content">
+            <!-- Recipes Tab -->
+            <div id="recipes" class="tab-content active">
+                <div class="filters">
+                    <input type="text" id="searchFilter" placeholder="Search recipes..." class="filter-input">
+                    <input type="text" id="authorFilter" placeholder="Filter by author..." class="filter-input">
+                    <select id="ratingFilter" class="filter-select">
+                        <option value="">All ratings</option>
+                        <option value="5">5 stars</option>
+                        <option value="4">4+ stars</option>
+                        <option value="3">3+ stars</option>
+                        <option value="2">2+ stars</option>
+                        <option value="1">1+ stars</option>
+                    </select>
+                    <select id="timeFilter" class="filter-select">
+                        <option value="">Any time</option>
+                        <option value="30">Under 30 min</option>
+                        <option value="60">Under 1 hour</option>
+                        <option value="120">Under 2 hours</option>
+                    </select>
+                    <button id="clearFilters" class="btn-secondary">Clear Filters</button>
+                </div>
+                
+                <div id="recipesList" class="recipes-grid">
+                    <!-- Recipes will be loaded here -->
+                </div>
+                
+                <div class="pagination">
+                    <button id="prevPage" class="btn-secondary">Previous</button>
+                    <span id="pageInfo">Page 1</span>
+                    <button id="nextPage" class="btn-secondary">Next</button>
+                </div>
+            </div>
+
+            <!-- Add Recipe Tab -->
+            <div id="add" class="tab-content">
+                <form id="recipeForm" class="recipe-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="title">Recipe Title *</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="author">Author</label>
+                            <input type="text" id="author" name="author">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="prepTime">Prep Time (minutes)</label>
+                            <input type="number" id="prepTime" name="prepTime" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cookTime">Cook Time (minutes)</label>
+                            <input type="number" id="cookTime" name="cookTime" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="servings">Servings *</label>
+                            <input type="number" id="servings" name="servings" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="imageUrl">Image URL</label>
+                            <input type="url" id="imageUrl" name="imageUrl" placeholder="https://...">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="3" placeholder="Describe your recipe..."></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="source">Source</label>
+                        <input type="text" id="source" name="source" placeholder="Where did this recipe come from?">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" name="notes" rows="3" placeholder="Additional notes, tips, or variations..."></textarea>
+                    </div>
+                    
+                    <div class="ingredients-section">
+                        <h3>Ingredients</h3>
+                        <div id="ingredientsList">
+                            <div class="ingredient-row">
+                                <input type="text" placeholder="Ingredient name" class="ingredient-name" required>
+                                <input type="number" placeholder="Amount" class="ingredient-amount" min="0" step="0.1" required>
+                                <input type="text" placeholder="Unit" class="ingredient-unit" required>
+                                <input type="text" placeholder="Notes (optional)" class="ingredient-notes">
+                                <button type="button" class="remove-ingredient-btn">×</button>
+                            </div>
+                        </div>
+                        <button type="button" id="addIngredient" class="btn-secondary">+ Add Ingredient</button>
+                    </div>
+                    
+                    <div class="instructions-section">
+                        <h3>Instructions</h3>
+                        <div id="instructionsList">
+                            <div class="instruction-row">
+                                <span class="step-number">1</span>
+                                <textarea placeholder="Instruction step..." class="instruction-text" required></textarea>
+                                <input type="number" placeholder="Time (min)" class="instruction-time" min="0">
+                                <button type="button" class="remove-instruction-btn">×</button>
+                            </div>
+                        </div>
+                        <button type="button" id="addInstruction" class="btn-secondary">+ Add Step</button>
+                    </div>
+                    
+                    <div class="nutrition-section">
+                        <h3>Nutrition (per serving)</h3>
+                        <div class="nutrition-grid">
+                            <div class="form-group">
+                                <label for="calories">Calories</label>
+                                <input type="number" id="calories" name="calories" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="protein">Protein (g)</label>
+                                <input type="number" id="protein" name="protein" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="carbs">Carbs (g)</label>
+                                <input type="number" id="carbs" name="carbs" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="fat">Fat (g)</label>
+                                <input type="number" id="fat" name="fat" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="fiber">Fiber (g)</label>
+                                <input type="number" id="fiber" name="fiber" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="sugar">Sugar (g)</label>
+                                <input type="number" id="sugar" name="sugar" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Create Recipe & Generate Tags</button>
+                        <button type="reset" class="btn-secondary">Reset</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- AI Tag Generation Modal -->
+            <div id="aiTagModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>AI Tag Generation</h2>
+                    
+                    <div id="aiLoadingState" class="ai-loading-state">
+                        <i class="fas fa-robot"></i>
+                        <h3>AI is generating tags for this recipe...</h3>
+                        <p>Our AI is analyzing your recipe and suggesting relevant tags</p>
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                    </div>
+                    
+                    <div id="aiTagResults" class="ai-tag-results" style="display: none;">
+                        <h3>Suggested Tags</h3>
+                        <p>Review and modify the AI-generated tags for your recipe:</p>
+                        
+                        <div class="tag-selection-area">
+                            <div id="suggestedTags" class="suggested-tags">
+                                <!-- AI suggested tags will be displayed here -->
+                            </div>
+                            
+                            <div class="custom-tags-section">
+                                <label for="customTags">Add your own tags:</label>
+                                <input type="text" id="customTags" placeholder="Enter additional tags (comma separated)">
+                            </div>
+                        </div>
+                        
+                        <div class="tag-summary">
+                            <h4>Final Tags:</h4>
+                            <div id="finalTags" class="final-tags">
+                                <!-- Final selected tags will be shown here -->
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" id="confirmTags" class="btn-primary">Confirm & Save Recipe</button>
+                            <button type="button" id="cancelTags" class="btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div id="stats" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Recipes</h3>
+                        <div id="totalRecipes" class="stat-value">-</div>
+                    </div>
+                </div>
+                
+                <div class="stats-section">
+                    <h3>Recipes by Source</h3>
+                    <div id="topAuthors" class="stats-list">
+                        <!-- Source breakdown will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Random Recipe Tab -->
+            <div id="random" class="tab-content">
+                <div class="random-controls">
+                    <div class="form-group">
+                        <label for="randomAuthor">Author (optional)</label>
+                        <input type="text" id="randomAuthor" placeholder="Filter by author...">
+                    </div>
+                    <div class="form-group">
+                        <label for="randomMinRating">Minimum Rating</label>
+                        <select id="randomMinRating">
+                            <option value="">Any rating</option>
+                            <option value="5">5 stars</option>
+                            <option value="4">4+ stars</option>
+                            <option value="3">3+ stars</option>
+                        </select>
+                    </div>
+                    <button id="getRandomRecipe" class="btn-primary">Get Random Recipe</button>
+                </div>
+                
+                <div id="randomRecipeDisplay" class="random-recipe-display">
+                    <!-- Random recipe will be displayed here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for editing recipes -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Recipe</h2>
+            <form id="editForm" class="recipe-form">
+                <!-- Form fields will be populated dynamically -->
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for viewing recipe details -->
+    <div id="recipeModal" class="modal">
+        <div class="modal-content recipe-detail-modal">
+            <span class="close">&times;</span>
+            <div id="recipeDetailContent">
+                <!-- Recipe details will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
