@@ -899,17 +899,13 @@ Based on this recipe, generate relevant tags that would help categorize and find
 a italian sheet pan dish would be (quick and easy, chicken, dinner, italian) Return only the tags, no explanation.
         `;
         
-        const response = await fetch('http://192.168.68.63:11434/api/generate', {
+        const response = await fetch(`${API_BASE_URL}/ai/generate-tags`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
             },
-            mode: 'cors',
             body: JSON.stringify({
-                model: 'gemma3n:e4b',
-                prompt: aiPrompt,
-                stream: false
+                prompt: aiPrompt
             })
         });
         
