@@ -903,7 +903,9 @@ a italian sheet pan dish would be (quick and easy, chicken, dinner, italian) Ret
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
+            mode: 'cors',
             body: JSON.stringify({
                 model: 'gemma3n:e4b',
                 prompt: aiPrompt,
